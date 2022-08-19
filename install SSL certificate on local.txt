@@ -1,0 +1,43 @@
+1. install chocolaty
+add this script ot powershell:
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+2. check is chocolaty installed:
+
+choco /?
+
+3. install mkcert:
+
+choco install mkcert
+
+4. Setup mkcert on your machine (creates a CA)
+
+mkcert -install
+
+5. After running the above commands, you'll have created a certificate authority on your machine which enables you to generate certificates for all of your future projects.
+
+From the root of your create-react-app project, you should now run:
+
+# Create .cert directory if it doesn't exist
+mkdir -p .cert
+
+# Generate the certificate (ran from the root of this project)
+mkcert -key-file ./.cert/key.pem -cert-file ./.cert/cert.pem "localhost"
+
+
+We'll be storing our generated certificates in the .cert directory. These should not be committed to version control, so you should update your .gitignore to include the .cert directory.
+
+6. Next, we need to update the start script again to include our newly created certificate
+
+   "scripts": {
+    "start": "set HTTPS=true&&set SSL_CRT_FILE=./.cert/cert.pem&&set SSL_KEY_FILE=./.cert/key.pem&&react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+
+7. This procedure just works in Chrome
+
+8. to install the certificate in android go to this address \AppData\Local\mkcert and copy the cert in android storage.
+then go to this address: settings -> Security -> Advanced -> Encryption & credentials -> install a certificate
